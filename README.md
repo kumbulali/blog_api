@@ -2,6 +2,40 @@
 # 📁 Collection: Comments 
 
 
+## End-point: Login
+### Method: POST
+>```
+>http://localhost:3000/api/auth/login
+>```
+### Body (**raw**)
+
+```json
+{
+    "email": "alikumbul@local.com",
+    "password": "12345678"
+}
+```
+
+
+⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
+
+## End-point: Register
+### Method: POST
+>```
+>http://localhost:3000/api/auth/register
+>```
+### Body (**raw**)
+
+```json
+{
+    "full_name": "Ali Kumbul",
+    "email": "alikumbul@local.com",
+    "password": "12345678"
+}
+```
+
+⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
+
 ## End-point: Get Comment By ID
 ### Method: GET
 >```
