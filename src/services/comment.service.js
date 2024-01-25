@@ -2,7 +2,14 @@ const db = require('../config/db.connection.config'),
   jwtHelper = require('../helpers/jwt.helper'),
   _ = require('lodash');
 
-module.exports.getCommentsByPostId = async (postId) => {
+module.exports.getCommentsByPostId = async (post_id) => {
+  const postResult = await db.query(`SELECT deleted_at FROM posts WHERE id = $1`, [post_id]),
+    post = postResult.rows[0];
+
+  if(!post || post.deleted_at){
+    throw new Error('The post you tried to comment on was not found');
+  }
+
   const result = await db.query(`SELECT 
   comments.id, 
   users.full_name, 
@@ -14,7 +21,7 @@ FROM comments
 INNER JOIN users ON comments.user_id = users.id 
 WHERE comments.post_id = $1 AND comments.deleted_at IS NULL  
 GROUP BY comments.id, users.full_name, users.username
-ORDER BY comments.created_at DESC`, [postId]);
+ORDER BY comments.created_at DESC`, [post_id]);
 
   if(!result.rows.length){
     throw new Error('No comments found');
@@ -47,7 +54,13 @@ ORDER BY comments.created_at DESC`, [commentId]),
 };
 
 module.exports.createComment = async (req) => {
-  const { id } = jwtHelper.getPayloadFromReq(req);
+  const { id } = jwtHelper.getPayloadFromReq(req),
+    postResult = await db.query(`SELECT deleted_at FROM posts WHERE id = $1`, [req.params.post_id]),
+    post = postResult.rows[0];
+
+  if(!post || post.deleted_at){
+    throw new Error('The post you tried to comment on was not found');
+  }
 
   const result = await db.query(`WITH inserted_comment AS (
     INSERT INTO comments (content, user_id, post_id) 
