@@ -34,7 +34,8 @@ const authRoutes = require('./src/routes/auth.route'),
     userRoutes = require('./src/routes/user.route'),
     postRoutes = require('./src/routes/post.route'),
     categoryRoutes = require('./src/routes/category.route'),
-    commentRouter = require('./src/routes/comment.route');
+    commentRouter = require('./src/routes/comment.route'),
+    elasticRouter = require('./src/routes/elastic.route');
 
 app.use(logger);
 app.use('/api/auth', authRoutes);
@@ -42,6 +43,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/comments', commentRouter);
+app.use('/elastic', elasticRouter);
 
 //Not found route 404
 app.use((req, res) => {
