@@ -1,4 +1,5 @@
-const categoryService = require('../services/category.service');
+const categoryService = require('../services/category.service'),
+    categoryValidation = require('../validations/category.validation');
 
 module.exports.getAllCategories = async (req, res) => {
     try {
@@ -13,6 +14,9 @@ module.exports.getAllCategories = async (req, res) => {
 
 module.exports.createCategory = async (req, res) => {
     try {
+        const { error } = categoryValidation.createCategoryValidationSchema.validate(req.body);
+        if (error)
+            throw new Error(error);
         const category = await categoryService.createCategory(req.body);
         res.status(200).send(category);
     } catch (err) {
@@ -24,6 +28,9 @@ module.exports.createCategory = async (req, res) => {
 
 module.exports.updateCategory = async (req, res) => {
     try {
+        const { error } = categoryValidation.updateCategoryValidationSchema.validate(req.body);
+        if (error)
+            throw new Error(error);
         const categoryId = req.params.category_id;
         await categoryService.updateCategory(req.body, categoryId);
         res.status(200).send({
