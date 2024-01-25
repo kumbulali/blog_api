@@ -7,9 +7,13 @@ userRouter.get('/me', [checkJwt], userController.getUserMe);
 
 userRouter.delete('/me', [checkJwt], userController.deleteMyAccount);
 
+userRouter.delete('/:user_id', [checkJwt, checkRole([1])], userController.deleteUserByID);
+
 userRouter.patch('/me', [checkJwt], userController.updateMyAccountInfo);
 
 userRouter.patch('/changePassword', [checkJwt], userController.changePassword);
+
+userRouter.patch('/changePassword/:user_id', [checkJwt, checkRole([1])], userController.changePasswordOfUserByID);
 
 userRouter.get('/id/:user_id', [checkJwt, checkRole([1])], userController.getUserByID);
 

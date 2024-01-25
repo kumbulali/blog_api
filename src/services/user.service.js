@@ -42,6 +42,36 @@ module.exports.changePassword = async (req) => {
   }
 };
 
+module.exports.changePasswordOfUserByID = async (req) => {
+  const user_id = req.params.user_id,
+    reqBody = req.body,
+    result = await db.query("SELECT * FROM users WHERE id = $1", [user_id]),
+    user = result.rows[0];
+
+  if(!user || user.deleted_at){
+    throw new Error('User not found');
+  }
+
+  const hashedPassword = await bcrypt.hash(reqBody.newPassword, user.salt);
+
+  try {
+    await db.query('BEGIN');
+
+    await db.query(
+      "UPDATE users SET password=$1 WHERE id=$2",
+      [hashedPassword, user.id]
+    );
+
+    await db.query('DELETE FROM sessions WHERE user_id = $1', [user.id]);
+
+    await db.query('COMMIT');
+  } catch (err) {
+    await db.query('ROLLBACK');
+
+    throw err;
+  }
+};
+
 module.exports.deleteMyAccount = async (req) => {
   const jwtPayload = jwtHelper.getPayloadFromReq(req),
     { id } = jwtPayload;
@@ -56,6 +86,28 @@ module.exports.deleteMyAccount = async (req) => {
     await db.query('UPDATE comments SET deleted_at = NOW() WHERE user_id = $1', [id]);
 
     await db.query('UPDATE posts SET deleted_at = NOW() WHERE user_id = $1', [id]);
+
+    await db.query('COMMIT');
+  } catch (err) {
+    await db.query('ROLLBACK');
+
+    throw err;
+  }
+};
+
+module.exports.deleteUserByID = async (req) => {
+  const user_id = req.params.user_id;
+
+  try {
+    await db.query('BEGIN');
+
+    await db.query('DELETE FROM sessions WHERE user_id = $1', [user_id]);
+
+    await db.query('UPDATE users SET deleted_at = NOW() WHERE id = $1', [user_id]);
+
+    await db.query('UPDATE comments SET deleted_at = NOW() WHERE user_id = $1', [user_id]);
+
+    await db.query('UPDATE posts SET deleted_at = NOW() WHERE user_id = $1', [user_id]);
 
     await db.query('COMMIT');
   } catch (err) {

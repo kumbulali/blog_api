@@ -29,9 +29,39 @@ module.exports.changePassword = async (req, res) => {
     }
 };
 
+module.exports.changePasswordOfUserByID = async (req, res) => {
+    try {
+        const { error } = userValidation.changePasswordOfUserByIDValidationSchema.validate(req.body);
+        if (error)
+            throw new Error(error);
+
+        await userService.changePasswordOfUserByID(req);
+        res.status(200).send({
+            message: 'Password changed'
+        });
+    } catch (err) {
+        res.status(400).send({
+            message: err.message
+        })
+    }
+};
+
 module.exports.deleteMyAccount = async (req, res) => {
     try {
         await userService.deleteMyAccount(req);
+        res.status(200).send({
+            message: 'Account successfully deleted'
+        });
+    } catch (err) {
+        res.status(400).send({
+            message: err.message
+        });
+    }
+};
+
+module.exports.deleteUserByID = async (req, res) => {
+    try {
+        await userService.deleteUserByID(req);
         res.status(200).send({
             message: 'Account successfully deleted'
         });
