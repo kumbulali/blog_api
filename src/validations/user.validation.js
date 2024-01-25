@@ -5,6 +5,11 @@ const userValidation = {
         currentPassword: Joi.string().required(),
         newPassword: Joi.string().required(),
         newPasswordVerify: Joi.ref('newPassword')
+    }),
+
+    changePasswordOfUserByIDValidationSchema: Joi.object({
+        newPassword: Joi.string().required(),
+        newPasswordVerify: Joi.ref('newPassword')
     })
 };
 
