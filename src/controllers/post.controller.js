@@ -1,4 +1,5 @@
-const postService = require('../services/post.service');
+const postService = require('../services/post.service'),
+    postValidation = require('../validations/post.validation');
 
 module.exports.getAllPosts = async (req, res) => {
     try {
@@ -13,6 +14,9 @@ module.exports.getAllPosts = async (req, res) => {
 
 module.exports.createPost = async (req, res) => {
     try {
+        const { error } = postValidation.createPostValidationSchema.validate(req.body);
+        if (error)
+            throw new Error(error);
         const post = await postService.createPost(req);
         res.status(200).send(post);
     } catch (err) {
@@ -24,6 +28,9 @@ module.exports.createPost = async (req, res) => {
 
 module.exports.updatePost = async (req, res) => {
     try {
+        const { error } = postValidation.createPostValidationSchema.validate(req.body);
+        if (error)
+            throw new Error(error);
         await postService.updatePost(req);
         res.status(200).send({
             message: 'Post successfully updated'
