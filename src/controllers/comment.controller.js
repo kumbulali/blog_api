@@ -1,4 +1,5 @@
-const commentService = require('../services/comment.service');
+const commentService = require('../services/comment.service'),
+    commentValidation = require('../validations/comment.validation');
 
 module.exports.getCommentsByPostId = async (req, res) => {
     try {
@@ -24,6 +25,9 @@ module.exports.getCommentById = async (req, res) => {
 
 module.exports.createComment = async (req, res) => {
     try {
+        const { error } = commentValidation.createCommentValidationSchema.validate(req.body);
+        if (error)
+            throw new Error(error);
         const post = await commentService.createComment(req);
         res.status(200).send(post);
     } catch (err) {
@@ -35,6 +39,9 @@ module.exports.createComment = async (req, res) => {
 
 module.exports.updateComment = async (req, res) => {
     try {
+        const { error } = commentValidation.updateCommentValidationSchema.validate(req.body);
+        if (error)
+            throw new Error(error);
         await commentService.updateComment(req);
         res.status(200).send({
             message: "Comment successfully updated"
