@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt'),
     jwtHelper = require('../helpers/jwt.helper'),
     db = require('../config/db.connection.config'),
-    config = require('../config/variables.config'),
     _ = require('lodash');
 
 const removeCredentials = (userObject) => {

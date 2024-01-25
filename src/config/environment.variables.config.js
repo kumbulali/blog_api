@@ -15,9 +15,20 @@ const DATABASE = {
     user: process.env.DB_USER
 };
 
+const ELASTIC = {
+    cloud: {
+        id: process.env.ELASTIC_CLOUD_ID
+    },
+    auth: {
+        username: process.env.ELASTIC_CLOUD_USERNAME,
+        password: process.env.ELASTIC_CLOUD_PASSWORD
+    }
+};
+
 const config = {
     server: SERVER,
     database: DATABASE,
+    elastic: ELASTIC,
     jwtSecret: process.env.JWT_SECRET
 };
 

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken'),
     db = require('../config/db.connection.config'),
     crypto = require('crypto'),
-    config = require('../config/variables.config');
+    config = require('../config/environment.variables.config');
 
 module.exports.signJwt = async (payload) => {
     const result = await db.query(`SELECT session_id FROM sessions WHERE user_id = $1`, [payload.id]);

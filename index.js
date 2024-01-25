@@ -1,5 +1,5 @@
 const app = require('./app');
-const { server } = require('./src/config/variables.config');
+const { server } = require('./src/config/environment.variables.config');
 
 const port = server.port;
 app.listen(port, () => {
