@@ -69,3 +69,14 @@ module.exports.getPostsByCategoryId = async (req, res) => {
         })
     }
 };
+
+module.exports.getPostByID = async (req, res) => {
+    try {
+        const post = await postService.getPostByID(req.params.post_id);
+        res.status(200).send(post);
+    } catch (err) {
+        res.status(400).send({
+            message: err.message
+        })
+    }
+};

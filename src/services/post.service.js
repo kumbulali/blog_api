@@ -10,15 +10,20 @@ module.exports.getAllPosts = async () => {
   COUNT(comments.post_id) AS comment_count,
   posts.title, 
   posts.content,
-  posts.category_id, 
+  categories.name AS category, 
   posts.created_at,
   posts.updated_at
 FROM posts 
 INNER JOIN users ON posts.user_id = users.id 
+INNER JOIN categories ON posts.category_id = categories.id 
 LEFT JOIN comments ON posts.id = comments.post_id
 WHERE posts.deleted_at IS NULL  
-GROUP BY posts.id, users.full_name, users.username
+GROUP BY posts.id, users.full_name, users.username, categories.name
 ORDER BY posts.created_at DESC`);
+
+  if (!result.rows.length) {
+    throw new Error('No posts found');
+  }
 
   return result.rows;
 };
@@ -42,7 +47,7 @@ module.exports.updatePost = async (req) => {
   const postResult = await db.query(`SELECT * FROM posts WHERE id = $1`, [postId]);
   const post = postResult.rows[0];
 
-  if(!post || post.deleted_at){
+  if (!post || post.deleted_at) {
     throw new Error('Post not found');
   }
 
@@ -61,7 +66,7 @@ module.exports.deletePost = async (req) => {
   const postResult = await db.query(`SELECT * FROM posts WHERE id = $1`, [postId]);
   const post = postResult.rows[0];
 
-  if(!post || post.deleted_at){
+  if (!post || post.deleted_at) {
     throw new Error('Post not found');
   }
 
@@ -93,15 +98,20 @@ module.exports.getMyPosts = async (req) => {
   COUNT(comments.post_id) AS comment_count,
   posts.title, 
   posts.content,
-  posts.category_id, 
+  categories.name as category, 
   posts.created_at,
   posts.updated_at
 FROM posts 
 INNER JOIN users ON posts.user_id = users.id 
+INNER JOIN categories ON posts.category_id = categories.id 
 LEFT JOIN comments ON posts.id = comments.post_id
 WHERE posts.user_id = $1 AND posts.deleted_at IS NULL  
-GROUP BY posts.id, users.full_name, users.username
+GROUP BY posts.id, users.full_name, users.username, categories.name
 ORDER BY posts.created_at DESC`, [id]);
+
+  if (!result.rows.length) {
+    throw new Error('No posts found');
+  }
 
   return result.rows;
 };
@@ -114,15 +124,46 @@ module.exports.getPostsByCategoryId = async (category_id) => {
   COUNT(comments.post_id) AS comment_count,
   posts.title, 
   posts.content,
-  posts.category_id, 
+  categories.name AS category, 
   posts.created_at,
   posts.updated_at
 FROM posts 
 INNER JOIN users ON posts.user_id = users.id 
+INNER JOIN categories ON posts.category_id = categories.id 
 LEFT JOIN comments ON posts.id = comments.post_id
 WHERE posts.category_id = $1 AND posts.deleted_at IS NULL  
-GROUP BY posts.id, users.full_name, users.username
+GROUP BY posts.id, users.full_name, users.username, categories.name
 ORDER BY posts.created_at DESC`, [category_id]);
 
+  if (!result.rows.length) {
+    throw new Error('No posts found');
+  }
+
   return result.rows;
+};
+
+module.exports.getPostByID = async (post_id) => {
+  const result = await db.query(`SELECT 
+  posts.id, 
+  users.full_name, 
+  users.username, 
+  COUNT(comments.post_id) AS comment_count,
+  posts.title, 
+  posts.content,
+  categories.name AS category, 
+  posts.created_at,
+  posts.updated_at
+FROM posts 
+INNER JOIN users ON posts.user_id = users.id 
+INNER JOIN categories ON posts.category_id = categories.id 
+LEFT JOIN comments ON posts.id = comments.post_id
+WHERE posts.id = $1 AND posts.deleted_at IS NULL  
+GROUP BY posts.id, users.full_name, users.username, categories.name
+ORDER BY posts.created_at DESC`, [post_id]);
+
+  if (!result.rows.length) {
+    throw new Error('Post not found');
+  }
+
+  return result.rows[0];
 };
