@@ -2,6 +2,7 @@ version: '3'
 services:
   db:
     image: postgres
+    container_name: iceberg-postgres-alikumbul
     restart: always
     environment:
       POSTGRES_USER: iceberguser
