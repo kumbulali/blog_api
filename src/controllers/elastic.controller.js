@@ -55,9 +55,9 @@ module.exports.postByTimeThisYear = async (req, res) => {
     }
 };
 
-module.exports.createPosts = async (req, res) => {
+module.exports.indexDummyPosts = async (req, res) => {
     try {
-        const result = await elasticService.createPosts();
+        const result = await elasticService.indexDummyPosts();
         res.status(200).send(result);
     } catch (err) {
         res.status(400).send({

@@ -228,7 +228,7 @@ module.exports.postByTimeThisYear = async () => {
   return monthlyPosts;
 };
 
-module.exports.createPosts = async () => {
+module.exports.indexDummyPosts = async () => {
   const promises = docs.map(async doc => {
     return await elasticClient.index({
       index: 'posts',
