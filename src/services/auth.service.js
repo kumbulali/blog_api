@@ -7,17 +7,17 @@ const removeCredentials = (userObject) => {
     return _.omit(userObject, ['password', 'salt', 'deleted_at']);
 };
 
-const generateUsername = async (fullName, userId) => {
-    fullName = fullName.replace(/\s/g, '').toLowerCase();
-    let username = fullName + userId;
-    let attempt = 1;
+const generateUsername = async (full_name, user_id) => {
+    full_name = full_name.replace(/\s/g, '').toLowerCase();
+    var username = full_name + user_id;
+    var attempt = 1;
     if (!await checkUsernameExistence(username)) {
         return username;
     }
 
     while (attempt <= 10) {
         const randomNumber = getRandomNumber();
-        username = fullName + userId + randomNumber;
+        username = full_name + user_id + randomNumber;
         if (!await checkUsernameExistence(username)) {
             return username;
         }
@@ -46,7 +46,7 @@ module.exports.register = async (userData) => {
 
     const result = await db.query(
         `INSERT INTO users (full_name, email, password, salt) 
-     VALUES ($1, $2, $3, $4) RETURNING full_name, username, email, role, created_at, updated_at`,
+     VALUES ($1, $2, $3, $4) RETURNING id, full_name, username, email, role, created_at, updated_at`,
         [
             userData.full_name,
             userData.email,
