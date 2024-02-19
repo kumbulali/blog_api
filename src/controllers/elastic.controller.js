@@ -65,3 +65,14 @@ module.exports.indexDummyPosts = async (req, res) => {
         })
     }
 };
+
+module.exports.indexDummyUsers = async (req, res) => {
+    try {
+        const result = await elasticService.indexDummyUsers();
+        res.status(200).send(result);
+    } catch (err) {
+        res.status(400).send({
+            message: err.message
+        })
+    }
+};

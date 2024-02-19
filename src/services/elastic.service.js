@@ -1,5 +1,6 @@
 const elasticClient = require('../config/elastic.connection.config');
-const docs = require('../../dummy/posts.json');
+const posts = require('../../dummy/posts.json');
+const users = require('../../dummy/users.json');
 
 function getDayOfWeek(dateString) {
   const date = new Date(dateString),
@@ -229,10 +230,21 @@ module.exports.postByTimeThisYear = async () => {
 };
 
 module.exports.indexDummyPosts = async () => {
-  const promises = docs.map(async doc => {
+  const promises = posts.map(async post => {
     return await elasticClient.index({
       index: 'posts',
-      body: doc
+      body: post
+    })
+  })
+
+  return Promise.all(promises);
+};
+
+module.exports.indexDummyUsers = async () => {
+  const promises = users.map(async user => {
+    return await elasticClient.index({
+      index: 'users',
+      body: user
     })
   })
 

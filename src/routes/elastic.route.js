@@ -15,4 +15,6 @@ elasticRouter.get('/postByTime/thisYear', [checkJwt, checkRole([1])], elasticCon
 
 elasticRouter.get('/indexDummyPosts', [checkJwt, checkRole([1])], elasticController.indexDummyPosts);
 
+elasticRouter.get('/indexDummyUsers', [checkJwt, checkRole([1])], elasticController.indexDummyUsers);
+
 module.exports = elasticRouter;
