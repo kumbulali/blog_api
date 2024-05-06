@@ -1,4 +1,4 @@
-# Project: Conquerer
+# Project: Blog API
 # 📁 Collection: Authentication 
 
 
